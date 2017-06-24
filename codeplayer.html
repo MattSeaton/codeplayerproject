@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Codeplayer</title>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+
+
+    <link href="jquery-ui/jquery-ui.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: monospace;
+            font-size: 20px;
+            padding: 0;
+            margin: 0;
+        }
+
+        #header {
+            background-color: #ddd7d7;
+            height: 35px;
+        }
+
+        #buttonwrapper {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        #logo {
+            float: left;
+            font-weight: bold;
+            font-size: 125%;
+            padding-left: 4px;
+        }
+
+        .button {
+            float: left;
+            border: 1px solid grey;
+            padding: 5px;
+            border-right: none;
+            font-size: 90%;
+        }
+
+        #html {
+            border-radius: 5px 0px 0px 5px;
+        }
+
+        #output {
+            border-radius: 0px 5px 5px 0px;
+            border-right: 1px solid grey;
+        }
+
+        .active {
+            background-color: #ecf2fa;
+        }
+
+
+        .highlighted {
+            background-color: grey;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        textarea {
+            resize: none;
+            border-top: none;
+            border-bottom: none;
+        }
+
+        .window {
+            width: 50%;
+            float: left;
+            border-left: none;
+        }
+
+        iframe {
+            border: none;
+        }
+    </style>
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+    <div id="header">
+
+        <div id="logo">
+
+            Codeplayer
+
+        </div>
+
+        <div id="buttonwrapper">
+
+            <div class="button active" id="html">HTML</div>
+            <div class="button" id="css">CSS</div>
+            <div class="button" id="javascript">JavaScript</div>
+            <div class="button active" id="output">OUTPUT</div>
+
+        </div>
+
+    </div>
+
+    <div id="main">
+
+        <textarea id="htmlwindow" class="window"></textarea>
+        <textarea id="csswindow" class="window hidden"></textarea>
+        <textarea id="javascriptwindow" class="window hidden"></textarea>
+
+
+        <iframe id="outputwindow" class="window"></iframe>
+
+
+    </div>
+
+
+
+    <script type="text/javascript">
+        function updateOutput() {
+
+            $("iframe").contents().find("html").html("<html><head><style type='text/css'>" + $("#csswindow").val() + "</style></head><body>" + $("#htmlwindow").val() + "</body></html>");
+
+
+            document.getElementById("outputwindow").contentWindow.eval($("#javascriptwindow").val());
+            eval($("#javascriptwindow").val());
+
+        }
+
+
+        //button behvaviour
+
+        $(".button").hover(function() {
+            $(this).addClass("highlighted");
+        }, function() {
+            $(this).removeClass("highlighted");
+        });
+
+        $(".button").click(function() {
+            $(this).toggleClass("active");
+            $(this).removeClass("highlighted");
+            var windowID = $(this).attr("id") + "window";
+            $("#" + windowID).toggleClass("hidden");
+            var numberOfActiveWindows = 4 - $('.hidden').length;
+
+            $(".window").width(($(window).width() / numberOfActiveWindows) - 15);
+        });
+
+        //window sizing
+
+        $(".window").height($(window).height() - $("#header").height() - 15);
+
+        $(".window").width(($(window).width() / 2) - 20);
+
+        //iframe behaviour
+
+
+
+        updateOutput();
+
+        $("textarea").on('change keyup paste', function() {
+
+            updateOutput();
+
+        });
+
+
+
+
+        //section behaviour -  used .toggleclass instead
+
+        /*     $("#html").click(function () {
+                $("#htmlwindow").toggle(500);
+            });
+            $("#css").click(function () {
+                $("#csswindow").toggle(500);
+            });
+            $("#javascript").click(function () {
+                $("#javascriptwindow").toggle(500);
+            });
+            $("#output").click(function () {
+                $("#outputwindow").toggle(500);
+            });
+
+        */
+    </script>
+
+</body>
+
+</html>
